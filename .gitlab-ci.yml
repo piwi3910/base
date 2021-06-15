@@ -1,0 +1,31 @@
+image: docker:19.03.12
+
+variables:
+  # change d-in-d to use unencrpyted to fix bug
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+  #CI_DEBUG_TRACE: "true"
+
+services:
+  - docker:19.03.12-dind
+
+stages:
+  - build
+  - push
+
+build:alpine:
+  tags:
+    - DOCKER
+    - K8S
+    - ARM64
+  stage: build
+  script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - >
+      docker build
+      --pull
+      --cache-from $CI_REGISTRY_IMAGE:latest
+      --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+      alpine/dockerfile
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA   
