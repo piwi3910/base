@@ -27,5 +27,5 @@ build:alpine:
       --pull
       --cache-from $CI_REGISTRY_IMAGE:latest
       --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-      alpine/dockerfile
+      alpine/
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA   
