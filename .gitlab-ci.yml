@@ -57,7 +57,7 @@ push:alpine:
     GIT_STRATEGY: none
   stage: push
   only:
-    - main
+    - master
   script:
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:alpine_$CI_COMMIT_SHA
@@ -73,7 +73,7 @@ push:ubuntu:
     GIT_STRATEGY: none
   stage: push
   only:
-    - main
+    - master
   script:
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA
@@ -89,7 +89,7 @@ dockerhub:alpine:
     GIT_STRATEGY: none
   stage: dockerhub
   only:
-    - main
+    - master
   script:
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:alpine_latest
@@ -106,7 +106,7 @@ dockerhub:ubuntu:
     GIT_STRATEGY: none
   stage: dockerhub
   only:
-    - main
+    - master
   script:
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:ubuntu_latest
@@ -123,7 +123,7 @@ dockerhub:default:
     GIT_STRATEGY: none
   stage: dockerhub
   only:
-    - main
+    - master
   script:
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:alpine_latest
