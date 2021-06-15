@@ -12,6 +12,7 @@ services:
 stages:
   - build
   - push
+  - dockerhub
 
 build:alpine:
   tags:
@@ -46,3 +47,96 @@ build:ubuntu:
       --tag $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA
       ubuntu/20.04/
     - docker push $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA
+
+push:alpine:latest:
+  tags:
+    - DOCKER
+    - K8S
+    - ARM64
+  variables:
+    GIT_STRATEGY: none
+  stage: push
+  only:
+    - main
+  script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:alpine_$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:alpine_$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:alpine_latest
+    - docker push $CI_REGISTRY_IMAGE:alpine_latest
+  needs:
+    - ["build:alpine"]  
+
+push:ubuntu:latest:
+  tags:
+    - DOCKER
+    - K8S
+    - ARM64
+  variables:
+    GIT_STRATEGY: none
+  stage: push
+  only:
+    - main
+  script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:alpine_latest
+    - docker push $CI_REGISTRY_IMAGE:ubuntu_latest
+  needs:
+    - ["build:ubuntu"]  
+
+push:dockerhub:alpine:latest:
+  tags:
+    - DOCKER
+    - K8S
+    - ARM64
+  variables:
+    GIT_STRATEGY: none
+  stage: push
+  only:
+    - main
+  script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:alpine_latest
+    - docker login -u $dockerhub_user -p $dockerhub_password docker.io
+    - docker tag $CI_REGISTRY_IMAGE:alpine_latest $dockerhub_user/$dockerhub_image:alpine_latest
+    - docker push $dockerhub_user/$dockerhub_image:alpine_latest
+  needs:
+    - ["push:alpine:latest"]
+
+push:dockerhub:ubuntu:latest:
+  tags:
+    - DOCKER
+    - K8S
+    - ARM64
+  variables:
+    GIT_STRATEGY: none
+  stage: push
+  only:
+    - main
+  script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:ubuntu_latest
+    - docker login -u $dockerhub_user -p $dockerhub_password docker.io
+    - docker tag $CI_REGISTRY_IMAGE:ubuntu_latest $dockerhub_user/$dockerhub_image:ubuntu_latest
+    - docker push $dockerhub_user/$dockerhub_image:ubuntu_latest
+  needs:
+    - ["push:ubuntu:latest"]
+
+push:dockerhub:latest:
+  tags:
+    - DOCKER
+    - K8S
+    - ARM64
+  variables:
+    GIT_STRATEGY: none
+  stage: push
+  only:
+    - main
+  script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:alpine_latest
+    - docker login -u $dockerhub_user -p $dockerhub_password docker.io
+    - docker tag $CI_REGISTRY_IMAGE:latest $dockerhub_user/$dockerhub_image:latest
+    - docker push $dockerhub_user/$dockerhub_image:latest
+  needs:
+    - ["push:alpine:latest"]
