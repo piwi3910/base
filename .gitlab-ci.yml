@@ -26,7 +26,7 @@ build:alpine:
       docker build
       --pull
       --cache-from $CI_REGISTRY_IMAGE:latest
-      --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+      --tag $CI_REGISTRY_IMAGE:alpine_$CI_COMMIT_SHA
       alpine/
     - docker push $CI_REGISTRY_IMAGE:alpine_$CI_COMMIT_SHA
 
@@ -43,6 +43,6 @@ build:ubuntu:
       docker build
       --pull
       --cache-from $CI_REGISTRY_IMAGE:latest
-      --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+      --tag $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA
       ubuntu/20.04/
     - docker push $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA
