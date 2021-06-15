@@ -77,7 +77,7 @@ push:ubuntu:
   script:
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:alpine_latest
+    - docker tag $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:ubuntu_latest
     - docker push $CI_REGISTRY_IMAGE:ubuntu_latest
   
 dockerhub:alpine:
