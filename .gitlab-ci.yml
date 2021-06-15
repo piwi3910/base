@@ -63,6 +63,7 @@ push:alpine:
     - docker pull $CI_REGISTRY_IMAGE:alpine_$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:alpine_$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:alpine_latest
     - docker push $CI_REGISTRY_IMAGE:alpine_latest
+  needs: ["build:alpine"]  
   
 push:ubuntu:
   tags:
@@ -79,6 +80,7 @@ push:ubuntu:
     - docker pull $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:ubuntu_$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:ubuntu_latest
     - docker push $CI_REGISTRY_IMAGE:ubuntu_latest
+  needs: ["build:ubuntu"]  
   
 dockerhub:alpine:
   tags:
@@ -96,6 +98,7 @@ dockerhub:alpine:
     - docker login -u $dockerhub_user -p $dockerhub_password docker.io
     - docker tag $CI_REGISTRY_IMAGE:alpine_latest $dockerhub_user/$dockerhub_image:alpine_latest
     - docker push $dockerhub_user/$dockerhub_image:alpine_latest
+  needs: ["push:alpine"]  
   
 dockerhub:ubuntu:
   tags:
@@ -113,6 +116,7 @@ dockerhub:ubuntu:
     - docker login -u $dockerhub_user -p $dockerhub_password docker.io
     - docker tag $CI_REGISTRY_IMAGE:ubuntu_latest $dockerhub_user/$dockerhub_image:ubuntu_latest
     - docker push $dockerhub_user/$dockerhub_image:ubuntu_latest
+  needs: ["push:ubuntu"]  
   
 dockerhub:default:
   tags:
@@ -128,6 +132,7 @@ dockerhub:default:
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:alpine_latest
     - docker login -u $dockerhub_user -p $dockerhub_password docker.io
-    - docker tag $CI_REGISTRY_IMAGE:latest $dockerhub_user/$dockerhub_image:latest
+    - docker tag $CI_REGISTRY_IMAGE:alpine_latest $dockerhub_user/$dockerhub_image:latest
     - docker push $dockerhub_user/$dockerhub_image:latest
+  needs: ["push:alpine"]  
   
