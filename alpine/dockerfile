@@ -5,8 +5,8 @@ RUN apk update --no-cache &&\
     apk add --no-cache \
     tzdata \
     bash \
-    bash-completion &&\
-    ca-certificates &&\
+    bash-completion \
+    ca-certificates \
     openssl &&\
     echo "" > /root/.ash_history
 
