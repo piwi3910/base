@@ -14,6 +14,6 @@ RUN apk update --no-cache &&\
 RUN sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd
 
 # run ca-cert updates
-RUN ca-certificates
+RUN update-ca-certificates
 
 ENV LC_ALL=en_US.UTF-8    
