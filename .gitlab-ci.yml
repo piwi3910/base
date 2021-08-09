@@ -42,7 +42,7 @@ dockerhub:alpine:
     entrypoint: [""]
   script:
     - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{"https://index.docker.io/v1/":{\"auth\":\"$(echo -n ${dockerhub_user}:${dockerhub_password} | base64)\"}}}" > /kaniko/.docker/config.json
+    - echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"$(echo -n ${dockerhub_user}:${dockerhub_password} | base64)\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/alpine/Dockerfile --cache=true --cache-ttl=24h --cache-repo=$CI_REGISTRY_IMAGE/cache --destination $dockerhub_user/base:alpine_$CI_COMMIT_SHA --destination $dockerhub_user/base:alpine_latest --destination $dockerhub_user/base:latest
   needs: ["build:alpine"]  
   
@@ -60,7 +60,7 @@ dockerhub:ubuntu:
     entrypoint: [""]
   script:
     - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"https://index.docker.io/v1/":{\"auth\":\"$(echo -n ${dockerhub_user}:${dockerhub_password} | base64)\"}}}" > /kaniko/.docker/config.json
+    - echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"$(echo -n ${dockerhub_user}:${dockerhub_password} | base64)\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/ubuntu/20.04/Dockerfile --cache=true --cache-ttl=24h --cache-repo=$CI_REGISTRY_IMAGE/cache --destination $dockerhub_user/base:ubuntu_$CI_COMMIT_SHA --destination $dockerhub_user/base:ubuntu_latest 
   needs: ["build:ubuntu"]  
 
