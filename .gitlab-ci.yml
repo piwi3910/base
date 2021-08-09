@@ -32,8 +32,6 @@ dockerhub:alpine:
   tags:
     - DOCKER
     - ARM64
-  variables:
-    GIT_STRATEGY: none
   stage: dockerhub
   only:
     - master
@@ -49,8 +47,6 @@ dockerhub:ubuntu:
   tags:
     - DOCKER
     - ARM64
-  variables:
-    GIT_STRATEGY: none
   stage: dockerhub
   only:
     - master
@@ -60,7 +56,6 @@ dockerhub:ubuntu:
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"$(echo -n ${dockerhub_user}:${dockerhub_password} | base64)\"}}}" > /kaniko/.docker/config.json
-    - ls -lah $CI_PROJECT_DIR/ubuntu/20.04
     - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/ubuntu/20.04/Dockerfile --destination $dockerhub_user/base:ubuntu_$CI_COMMIT_SHA --destination $dockerhub_user/base:ubuntu_latest 
 
 
