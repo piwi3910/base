@@ -30,10 +30,13 @@ pipeline {
     }
   }
   stages {
-    stage('Build with Kaniko') {
+    stage('Build base Alpine image with Kaniko') {
       steps {
-        sh 'ls -lah'
-        sh '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=piwi3910/base:test'
+        sh '/kaniko/executor -f `pwd`/alpine/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=piwi3910/base:alpine_latest --destination=piwi3910/base:latest'
+      }
+      stage('Build base Ubuntu image with Kaniko') {
+      steps {
+        sh '/kaniko/executor -f `pwd`/ubuntu/20.04/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=piwi3910/base:ubuntu_latest'
       }
     }
   }
