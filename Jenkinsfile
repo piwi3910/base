@@ -32,7 +32,7 @@ pipeline {
   stages {
     stage('Build with Kaniko') {
       steps {
-        ls -lah
+        sh 'ls -lah'
         sh '/kaniko/executor -f `pwd`/Dockerfile -c `pwd` --insecure --skip-tls-verify --cache=true --destination=piwi3910/base:test'
       }
     }
