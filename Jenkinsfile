@@ -14,7 +14,7 @@ pipeline {
         steps {
           container('docker') {
             script {
-              dockerImage = docker.build('imagename':alpine_latest, `pwd`/alpine ) 
+              dockerImage = docker.build("${env.imagename}:alpine_latest", "${WORKSPACE}/alpine" ) 
             }
           }
         }    
