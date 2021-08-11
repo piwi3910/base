@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    imagename = piwi3910/base
+    imagename = "piwi3910/base"
     registryCredential = 'docker_reg'
     dockerImage ''
   }
