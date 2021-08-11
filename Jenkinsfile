@@ -25,6 +25,7 @@ pipeline {
           container('docker') {
             script {
               docker.withRegistry( '', registryCredential ) {
+                alpine_dockerImage.push('alpine_latest')
                 alpine_dockerImage.push('latest')
               }
             }
@@ -45,7 +46,7 @@ pipeline {
           container('docker') {
             script {
               docker.withRegistry( '', registryCredential ) {
-                ubuntu_dockerImage.push('latest')
+                ubuntu_dockerImage.push('ubuntu_latest')
               }
             }
           }
