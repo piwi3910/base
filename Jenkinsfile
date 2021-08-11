@@ -2,7 +2,7 @@ pipeline {
   environment {
     imagename = "piwi3910/base"
     registryCredential = 'docker_reg'
-    dockerImage = ''
+    alpine_dockerImage = ''
   }
   agent {
     kubernetes {
@@ -14,7 +14,7 @@ pipeline {
         steps {
           container('docker') {
             script {
-              dockerImage = docker.build("${env.imagename}:alpine_latest", "${WORKSPACE}/alpine" ) 
+              alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "${WORKSPACE}/alpine" ) 
             }
           }
         }    
