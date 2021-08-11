@@ -34,7 +34,7 @@ pipeline {
         }
       }
     }
-    stage('Run Dockerhub Push')
+    stage('Run Dockerhub Push') {
       parallel {            
         stage('Push base Alpine image to DockerHub') {
             steps {
