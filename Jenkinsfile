@@ -3,6 +3,7 @@ pipeline {
     imagename = "piwi3910/base"
     registryCredential = 'docker_reg'
     alpine_dockerImage = ''
+    ubuntu_dockerImage = ''
   }
   agent {
     kubernetes {
@@ -18,13 +19,37 @@ pipeline {
             }
           }
         }    
+    }
+    stage('Push base Alpine image to DockerHub') {
+        steps {
+          container('docker') {
+            script {
+              docker.withRegistry( '', registryCredential ) {
+                alpine_dockerImage.push('latest')
+              }
+            }
+          }
+        }    
     }  
     stage('Build base Ubuntu image with dind') {
         steps {
           container('docker') {
-            sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing `pwd`/ubuntu/20.04'
+            script {
+              ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "${WORKSPACE}/ubuntu/20.04/" ) 
+            }
           }
-        }  
+        }    
+    }
+    stage('Push base Ubuntu image to DockerHub') {
+        steps {
+          container('docker') {
+            script {
+              docker.withRegistry( '', registryCredential ) {
+                ubuntu_dockerImage.push('latest')
+              }
+            }
+          }
+        }    
     }    
   }
 }
