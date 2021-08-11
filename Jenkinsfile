@@ -1,5 +1,6 @@
 pipeline {
   agent {
+    label 'alpine'
     kubernetes {
       yamlFile 'buildpod.yaml'
     }
