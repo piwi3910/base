@@ -8,6 +8,7 @@ pipeline {
     stage('Build base Alpine image with dind') {
         steps {
           container('docker') {
+            sh 'ls -lah'
             sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing alpine/Dockerfile'
             }
         }    
