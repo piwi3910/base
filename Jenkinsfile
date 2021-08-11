@@ -9,14 +9,14 @@ pipeline {
         steps {
           container('docker') {
             sh 'ls -lah'
-            sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing alpine/Dockerfile'
+            sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing `pwd`/alpine/Dockerfile'
             }
         }    
     }  
     stage('Build base Ubuntu image with dind') {
         steps {
           container('docker') {
-            sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing ubuntu/20.04/Dockerfile'
+            sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing `pwd`/ubuntu/20.04/Dockerfile'
           }
         }  
     }    
