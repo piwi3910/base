@@ -10,6 +10,7 @@ pipeline {
       yamlFile 'buildpod.yaml'
     }
   }
+  triggers { cron('0 0 * * 0')} // trigger the master branch to build weekly
   stages {
     stage('Run Builds') {
       parallel {
