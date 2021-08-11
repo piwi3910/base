@@ -6,6 +6,7 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
     apt-get -qy install \
         wget \
         curl \
+        grep \
         unzip \
         unrar \
         openssl \
@@ -13,3 +14,4 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
         && \
     apt-get -y autoremove &&\
     rm -rf /var/lib/apt/lists/*
+
