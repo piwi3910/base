@@ -1,7 +1,7 @@
 pipeline {
   agent {
-    label 'alpine'
     kubernetes {
+      label 'alpine'
       yamlFile 'buildpod.yaml'
     }
   }
