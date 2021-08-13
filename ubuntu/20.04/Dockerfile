@@ -11,6 +11,8 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
         unrar \
         openssl \
         ca-certificates \
+        sed \
+        jq \
         && \
     apt-get -y autoremove &&\
     rm -rf /var/lib/apt/lists/*
