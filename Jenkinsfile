@@ -16,7 +16,7 @@ pipeline {
         stage('Build base Alpine image with dind') {
           agent {
             kubernetes {
-              yamlFile 'buildpod_amd64.yaml'
+              yamlFile 'buildpod_arm64.yaml'
             }
           }
             steps {
@@ -33,7 +33,7 @@ pipeline {
         stage('Build base Ubuntu image with dind') {
           agent {
             kubernetes {
-              yamlFile 'buildpod_amd64.yaml'
+              yamlFile 'buildpod_arm64.yaml'
             }
           }          
             steps {
@@ -53,7 +53,7 @@ pipeline {
         stage('Push base Alpine image to DockerHub') {
           agent {
             kubernetes {
-              yamlFile 'buildpod_amd64.yaml'
+              yamlFile 'buildpod_arm64.yaml'
             }
           }          
             steps {
@@ -72,7 +72,7 @@ pipeline {
         stage('Push base Ubuntu image to DockerHub') {
           agent {
             kubernetes {
-              yamlFile 'buildpod_amd64.yaml'
+              yamlFile 'buildpod_arm64.yaml'
             }
           }          
             steps {
