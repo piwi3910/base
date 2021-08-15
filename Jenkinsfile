@@ -43,6 +43,7 @@ pipeline {
                 script {
                   docker.withRegistry( '', registryCredential ) {
                     alpine_dockerImage.push('alpine_latest')
+                    alpine_dockerImage.push('3.13.5')
                     alpine_dockerImage.push('latest')
                   }
                 }
