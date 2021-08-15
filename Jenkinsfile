@@ -4,6 +4,7 @@ pipeline {
     registryCredential = 'docker_reg'
     alpine_dockerImage = ''
     ubuntu_dockerImage = ''
+    alpine_version = "3.13.5"
   }
   agent {
     kubernetes {
@@ -18,7 +19,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "${WORKSPACE}/alpine" ) 
+                  alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} "${WORKSPACE}/alpine" ) 
                 }
               }
             }    

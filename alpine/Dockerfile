@@ -1,4 +1,6 @@
-FROM alpine:3.13.5
+ARG VERSION=default
+
+FROM alpine:${VERSION}
 
 RUN apk update --no-cache &&\
     apk upgrade &&\
