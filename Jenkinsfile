@@ -8,16 +8,16 @@ pipeline {
     alpine_version = "3.13.5"
     ubuntu_version = "20.04"
   }
-  agent none
+  agent {
+    kubernetes {
+      yamlFile 'buildpod_arm64.yaml'
+    }
+  }  
   triggers { cron('0 0 * * 0')} // trigger the master branch to build weekly
   stages {
     stage('Run Builds') {
       parallel {
         stage('Build base Alpine image with dind') {
-          agent {
-            kubernetes {
-              yamlFile 'buildpod_arm64.yaml'
-            }
           }
             steps {
               container('docker') {
@@ -31,10 +31,6 @@ pipeline {
         }
         
         stage('Build base Ubuntu image with dind') {
-          agent {
-            kubernetes {
-              yamlFile 'buildpod_arm64.yaml'
-            }
           }          
             steps {
               container('docker') {
@@ -51,10 +47,6 @@ pipeline {
     stage('Run Dockerhub Push') {
       parallel {            
         stage('Push base Alpine image to DockerHub') {
-          agent {
-            kubernetes {
-              yamlFile 'buildpod_arm64.yaml'
-            }
           }          
             steps {
               container('docker') {
@@ -70,15 +62,43 @@ pipeline {
         }  
 
         stage('Push base Ubuntu image to DockerHub') {
-          agent {
-            kubernetes {
-              yamlFile 'buildpod_arm64.yaml'
-            }
-          }          
+           }          
             steps {
               container('docker') {
                 script {
                   docker.withRegistry( '', docker_hub_cred ) {
+                    ubuntu_dockerImage.push('ubuntu_latest')
+                    ubuntu_dockerImage.push('ubuntu_${ubuntu_version}')
+                  }
+                }
+              }
+            }    
+        }
+      }  
+    }
+    stage('Run Nexus Push') {
+      parallel {            
+        stage('Push base Alpine image to Internal Nexus') {
+           }          
+            steps {
+              container('docker') {
+                script {
+                  docker.withRegistry( 'https://registry.watteel.dev', nexus_cred ) {
+                    alpine_dockerImage.push('alpine_latest')
+                    alpine_dockerImage.push('alpine_${alpine_version}')
+                    alpine_dockerImage.push('latest')
+                  }
+                }
+              }
+            }    
+        }  
+
+        stage('Push base Ubuntu image to Internal Nexus') {
+          }          
+            steps {
+              container('docker') {
+                script {
+                  docker.withRegistry( 'https://registry.watteel.dev', nexus_cred ) {
                     ubuntu_dockerImage.push('ubuntu_latest')
                     ubuntu_dockerImage.push('ubuntu_${ubuntu_version}')
                   }
