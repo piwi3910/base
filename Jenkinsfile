@@ -5,6 +5,7 @@ pipeline {
     alpine_dockerImage = ''
     ubuntu_dockerImage = ''
     alpine_version = "3.13.5"
+    ubuntu_version = "20.04"
   }
   agent {
     kubernetes {
@@ -19,7 +20,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} "${WORKSPACE}/alpine" ) 
+                  alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
                 }
               }
             }    
@@ -29,7 +30,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "${WORKSPACE}/ubuntu/20.04/" ) 
+                  ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
                 }
               }
             }    
@@ -44,7 +45,7 @@ pipeline {
                 script {
                   docker.withRegistry( '', registryCredential ) {
                     alpine_dockerImage.push('alpine_latest')
-                    alpine_dockerImage.push('3.13.5')
+                    alpine_dockerImage.push('alpine_${alpine_version}')
                     alpine_dockerImage.push('latest')
                   }
                 }
@@ -58,6 +59,7 @@ pipeline {
                 script {
                   docker.withRegistry( '', registryCredential ) {
                     ubuntu_dockerImage.push('ubuntu_latest')
+                    ubuntu_dockerImage.push('ubuntu_${ubuntu_version}')
                   }
                 }
               }

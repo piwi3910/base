@@ -1,4 +1,6 @@
-FROM ubuntu:20.04
+ARG VERSION=default
+
+FROM ubuntu:${VERSION}
 
 RUN export DEBIAN_FRONTEND=noninteractive &&\
     apt-get -q update && \
