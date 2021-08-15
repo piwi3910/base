@@ -8,6 +8,8 @@ spec:
                 operator: In
                 values:
                 - arm64
+  imagePullSecrets:
+  - name: nexus-repo              
   volumes:
   - name: docker-socket
     emptyDir: {}
