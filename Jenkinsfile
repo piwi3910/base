@@ -18,7 +18,6 @@ pipeline {
     stage('Run Builds') {
       parallel {
         stage('Build base Alpine image with dind') {
-          }
             steps {
               container('docker') {
                 script {
@@ -31,7 +30,6 @@ pipeline {
         }
         
         stage('Build base Ubuntu image with dind') {
-          }          
             steps {
               container('docker') {
                 script {
@@ -46,8 +44,7 @@ pipeline {
     }
     stage('Run Dockerhub Push') {
       parallel {            
-        stage('Push base Alpine image to DockerHub') {
-          }          
+        stage('Push base Alpine image to DockerHub') {       
             steps {
               container('docker') {
                 script {
@@ -61,8 +58,7 @@ pipeline {
             }    
         }  
 
-        stage('Push base Ubuntu image to DockerHub') {
-           }          
+        stage('Push base Ubuntu image to DockerHub') {         
             steps {
               container('docker') {
                 script {
@@ -78,8 +74,7 @@ pipeline {
     }
     stage('Run Nexus Push') {
       parallel {            
-        stage('Push base Alpine image to Internal Nexus') {
-           }          
+        stage('Push base Alpine image to Internal Nexus') {          
             steps {
               container('docker') {
                 script {
@@ -93,8 +88,7 @@ pipeline {
             }    
         }  
 
-        stage('Push base Ubuntu image to Internal Nexus') {
-          }          
+        stage('Push base Ubuntu image to Internal Nexus') {          
             steps {
               container('docker') {
                 script {
