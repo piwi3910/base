@@ -9,28 +9,37 @@ pipeline {
   }
   agent {
     kubernetes {
-      yamlFile 'buildpod.yaml'
+      yamlFile 'buildpod_arm64.yaml'
+    }
+  }
+  agent {
+    kubernetes {
+      yamlFile 'buildpod_amd64.yaml'
     }
   }
   triggers { cron('0 0 * * 0')} // trigger the master branch to build weekly
   stages {
-    stage('Run Builds') {
+    stage('Run Builds AMD64') {
       parallel {
         stage('Build base Alpine image with dind') {
             steps {
-              container('docker') {
+              container('docker_amd64') {
                 script {
-                  alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
-                }
+                  docker.withRegistry( '', registryCredential ) {
+                    alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
+                  }
+                }  
               }
             }    
         }
         
         stage('Build base Ubuntu image with dind') {
             steps {
-              container('docker') {
+              container('docker_amd64') {
                 script {
-                  ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
+                  docker.withRegistry( '', registryCredential ) {
+                    ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
+                  }  
                 }
               }
             }    
@@ -41,7 +50,7 @@ pipeline {
       parallel {            
         stage('Push base Alpine image to DockerHub') {
             steps {
-              container('docker') {
+              container('docker_amd64') {
                 script {
                   docker.withRegistry( '', registryCredential ) {
                     alpine_dockerImage.push('alpine_latest')
@@ -55,7 +64,7 @@ pipeline {
 
         stage('Push base Ubuntu image to DockerHub') {
             steps {
-              container('docker') {
+              container('docker_amd64') {
                 script {
                   docker.withRegistry( '', registryCredential ) {
                     ubuntu_dockerImage.push('ubuntu_latest')
