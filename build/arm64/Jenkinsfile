@@ -7,6 +7,7 @@ pipeline {
     ubuntu_dockerImage = ''
     alpine_version = "3.13.5"
     ubuntu_version = "20.04"
+    nexus_registry = "https://registry.watteel.dev"
   }
   agent {
     kubernetes {
@@ -21,7 +22,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( 'https://registry.watteel.dev', nexus_cred ) {                  
+                  docker.withRegistry( nexus_registry, nexus_cred ) {                  
                     alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
                   }  
                 }  
@@ -33,7 +34,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( 'https://registry.watteel.dev', nexus_cred ) {
+                  docker.withRegistry( nexus_registry, nexus_cred ) {
                     ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
                   }  
                 }
@@ -78,7 +79,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( 'https://registry.watteel.dev', nexus_cred ) {
+                  docker.withRegistry( nexus_registry, nexus_cred ) {
                     alpine_dockerImage.push('alpine_latest')
                     alpine_dockerImage.push('alpine_${alpine_version}')
                     alpine_dockerImage.push('latest')
@@ -92,7 +93,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( 'https://registry.watteel.dev', nexus_cred ) {
+                  docker.withRegistry( nexus_registry, nexus_cred ) {
                     ubuntu_dockerImage.push('ubuntu_latest')
                     ubuntu_dockerImage.push('ubuntu_${ubuntu_version}')
                   }
