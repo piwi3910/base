@@ -13,7 +13,7 @@ spec:
     emptyDir: {}
   containers:
   - name: docker
-    image: docker:19.03.1
+    image: registry.watteel.dev/docker:19.03.1
     command:
     - sleep
     args:
@@ -22,7 +22,7 @@ spec:
     - name: docker-socket
       mountPath: /var/run
   - name: docker-daemon
-    image: docker:19.03.1-dind
+    image: registry.watteel.dev/docker:19.03.1-dind
     securityContext:
       privileged: true
     volumeMounts:

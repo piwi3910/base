@@ -1,6 +1,6 @@
 ARG VERSION=default
 
-FROM ubuntu:${VERSION}
+FROM registry.watteel.dev/ubuntu:${VERSION}
 
 RUN export DEBIAN_FRONTEND=noninteractive &&\
     apt-get -q update && \

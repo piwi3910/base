@@ -1,7 +1,8 @@
 pipeline {
   environment {
     imagename = "piwi3910/base"
-    registryCredential = 'docker_reg'
+    docker_hub_cred = 'docker_reg'
+    nexus_cred = 'f06e38c2-f3b3-43a2-a9d1-3dabb64ca873'
     alpine_dockerImage = ''
     ubuntu_dockerImage = ''
     alpine_version = "3.13.5"
@@ -21,7 +22,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( '', registryCredential ) {
+                  docker.withRegistry( '', nexus_cred ) {
                     alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
                   }
                 }  
@@ -38,7 +39,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( '', registryCredential ) {
+                  docker.withRegistry( '', nexus_cred ) {
                     ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
                   }  
                 }
@@ -58,7 +59,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( '', registryCredential ) {
+                  docker.withRegistry( '', docker_hub_cred ) {
                     alpine_dockerImage.push('alpine_latest')
                     alpine_dockerImage.push('alpine_${alpine_version}')
                     alpine_dockerImage.push('latest')
@@ -77,7 +78,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( '', registryCredential ) {
+                  docker.withRegistry( '', docker_hub_cred ) {
                     ubuntu_dockerImage.push('ubuntu_latest')
                     ubuntu_dockerImage.push('ubuntu_${ubuntu_version}')
                   }

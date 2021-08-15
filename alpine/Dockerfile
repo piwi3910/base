@@ -1,6 +1,6 @@
 ARG VERSION=default
 
-FROM alpine:${VERSION}
+FROM registry.watteel.dev/alpine:${VERSION}
 
 RUN apk update --no-cache &&\
     apk upgrade &&\
