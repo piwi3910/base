@@ -10,16 +10,16 @@ pipeline {
   agent none
   triggers { cron('0 0 * * 0')} // trigger the master branch to build weekly
   stages {
-    stage('Run Builds AMD64') {
-        agent {
-          kubernetes {
-            yamlFile 'buildpod_amd64.yaml'
-          }
-        }
+    stage('Run Builds') {
       parallel {
         stage('Build base Alpine image with dind') {
+          agent {
+            kubernetes {
+              yamlFile 'buildpod_amd64.yaml'
+            }
+          }
             steps {
-              container('docker_amd64') {
+              container('docker') {
                 script {
                   docker.withRegistry( '', registryCredential ) {
                     alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
@@ -30,8 +30,13 @@ pipeline {
         }
         
         stage('Build base Ubuntu image with dind') {
+          agent {
+            kubernetes {
+              yamlFile 'buildpod_amd64.yaml'
+            }
+          }          
             steps {
-              container('docker_amd64') {
+              container('docker') {
                 script {
                   docker.withRegistry( '', registryCredential ) {
                     ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
@@ -42,16 +47,16 @@ pipeline {
         }
       }
     }
-    stage('Run Dockerhub Push AMD64') {
-        agent {
-          kubernetes {
-            yamlFile 'buildpod_amd64.yaml'
-          }
-        }
+    stage('Run Dockerhub Push') {
       parallel {            
         stage('Push base Alpine image to DockerHub') {
+          agent {
+            kubernetes {
+              yamlFile 'buildpod_amd64.yaml'
+            }
+          }          
             steps {
-              container('docker_amd64') {
+              container('docker') {
                 script {
                   docker.withRegistry( '', registryCredential ) {
                     alpine_dockerImage.push('alpine_latest')
@@ -64,8 +69,13 @@ pipeline {
         }  
 
         stage('Push base Ubuntu image to DockerHub') {
+          agent {
+            kubernetes {
+              yamlFile 'buildpod_amd64.yaml'
+            }
+          }          
             steps {
-              container('docker_amd64') {
+              container('docker') {
                 script {
                   docker.withRegistry( '', registryCredential ) {
                     ubuntu_dockerImage.push('ubuntu_latest')

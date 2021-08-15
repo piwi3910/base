@@ -12,7 +12,7 @@ spec:
   - name: docker-socket
     emptyDir: {}
   containers:
-  - name: docker_arm64
+  - name: docker
     image: docker:19.03.1
     command:
     - sleep
@@ -21,7 +21,7 @@ spec:
     volumeMounts:
     - name: docker-socket
       mountPath: /var/run
-  - name: docker-daemon_arm64
+  - name: docker-daemon
     image: docker:19.03.1-dind
     securityContext:
       privileged: true
