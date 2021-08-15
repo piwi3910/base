@@ -22,7 +22,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( '', nexus_cred ) {                  
+                  docker.withRegistry( 'https://registry.watteel.dev', nexus_cred ) {                  
                     alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
                   }  
                 }  
@@ -39,7 +39,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( '', nexus_cred ) {
+                  docker.withRegistry( 'https://registry.watteel.dev', nexus_cred ) {
                     ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
                   }  
                 }
