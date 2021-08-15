@@ -7,19 +7,15 @@ pipeline {
     alpine_version = "3.13.5"
     ubuntu_version = "20.04"
   }
-  agent {
-    kubernetes {
-      yamlFile 'buildpod_arm64.yaml'
-    }
-  }
-  agent {
-    kubernetes {
-      yamlFile 'buildpod_amd64.yaml'
-    }
-  }
+  agent none
   triggers { cron('0 0 * * 0')} // trigger the master branch to build weekly
   stages {
     stage('Run Builds AMD64') {
+        agent {
+          kubernetes {
+            yamlFile 'buildpod_amd64.yaml'
+          }
+        }
       parallel {
         stage('Build base Alpine image with dind') {
             steps {
@@ -46,7 +42,12 @@ pipeline {
         }
       }
     }
-    stage('Run Dockerhub Push') {
+    stage('Run Dockerhub Push AMD64') {
+        agent {
+          kubernetes {
+            yamlFile 'buildpod_amd64.yaml'
+          }
+        }
       parallel {            
         stage('Push base Alpine image to DockerHub') {
             steps {
