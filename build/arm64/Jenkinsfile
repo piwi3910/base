@@ -1,7 +1,8 @@
 pipeline {
   environment {
     dockerhub_account = "piwi3910"
-    imagename = "base"
+    ubuntu_imagename = "ubuntu"
+    alpine_imagename = "alpine"
     docker_hub_cred = 'docker_reg'
     nexus_cred = 'f06e38c2-f3b3-43a2-a9d1-3dabb64ca873'
     alpine_dockerImage = ''
@@ -24,7 +25,7 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( "https://${nexus_registry}", nexus_cred ) {                  
-                    alpine_dockerImage = docker.build("${imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
+                    alpine_dockerImage = docker.build("${alpine_imagename}:${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
                   }  
                 }  
               }
@@ -36,7 +37,7 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( "https://${nexus_registry}", nexus_cred ) {
-                    ubuntu_dockerImage = docker.build("${imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
+                    ubuntu_dockerImage = docker.build("${ubuntu_imagename}:${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
                   }  
                 }
               }
@@ -51,10 +52,9 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( '', docker_hub_cred ) {
-                    sh("docker tag ${imagename}:alpine_${BUILD_ID} ${dockerhub_account}/${imagename}:alpine_${BUILD_ID}")
-                    alpine_dockerImage_hub = docker.image("${dockerhub_account}/${imagename}:alpine_${BUILD_ID}")
-                    alpine_dockerImage_hub.push('alpine_latest')
-                    alpine_dockerImage_hub.push('alpine_${alpine_version}')
+                    sh("docker tag ${alpine_imagename}:${BUILD_ID} ${dockerhub_account}/${alpine_imagename}:${BUILD_ID}")
+                    alpine_dockerImage_hub = docker.image("${dockerhub_account}/${alpine_imagename}:${BUILD_ID}")
+                    alpine_dockerImage_hub.push('${alpine_version}')
                     alpine_dockerImage_hub.push('latest')
                   }
                 }
@@ -67,10 +67,10 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( '', docker_hub_cred ) {
-                    sh("docker tag ${imagename}:ubuntu_${BUILD_ID} ${dockerhub_account}/${imagename}:ubuntu_${BUILD_ID}")
-                    ubuntu_dockerImage_hub = docker.image("${dockerhub_account}/${imagename}:ubuntu_${BUILD_ID}")                    
-                    ubuntu_dockerImage_hub.push('ubuntu_latest')
-                    ubuntu_dockerImage_hub.push('ubuntu_${ubuntu_version}')
+                    sh("docker tag ${ubuntu_imagename}:ubuntu_${BUILD_ID} ${dockerhub_account}/${ubuntu_imagename}:${BUILD_ID}")
+                    ubuntu_dockerImage_hub = docker.image("${dockerhub_account}/${ubuntu_imagename}:${BUILD_ID}")                    
+                    ubuntu_dockerImage_hub.push('latest')
+                    ubuntu_dockerImage_hub.push('${ubuntu_version}')
                   }
                 }
               }
@@ -85,11 +85,10 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( "https://${nexus_registry}", nexus_cred ) {
-                    sh("docker tag ${imagename}:alpine_${BUILD_ID} ${nexus_registry}/${imagename}:alpine_${BUILD_ID}")
-                    alpine_dockerImage_interal = docker.image("${nexus_registry}/${imagename}:alpine_${BUILD_ID}")                    
-                    alpine_dockerImage_interal.push('alpine_latest')
-                    alpine_dockerImage_interal.push('alpine_${alpine_version}')
+                    sh("docker tag ${alpine_imagename}:${BUILD_ID} ${nexus_registry}/${alpine_imagename}:${BUILD_ID}")
+                    alpine_dockerImage_interal = docker.image("${nexus_registry}/${imagename}:${BUILD_ID}")                    
                     alpine_dockerImage_interal.push('latest')
+                    alpine_dockerImage_interal.push('${alpine_version}')
                   }
                 }
               }
@@ -101,10 +100,10 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( "https://${nexus_registry}", nexus_cred ) {
-                    sh("docker tag ${imagename}:ubuntu_${BUILD_ID} ${nexus_registry}/${imagename}:ubuntu_${BUILD_ID}")
-                    ubuntu_dockerImage_interal = docker.image("${nexus_registry}/${imagename}:ubuntu_${BUILD_ID}")                                        
-                    ubuntu_dockerImage_interal.push('ubuntu_latest')
-                    ubuntu_dockerImage_interal.push('ubuntu_${ubuntu_version}')
+                    sh("docker tag ${ubuntu_imagename}:${BUILD_ID} ${nexus_registry}/${ubuntu_imagename}:${BUILD_ID}")
+                    ubuntu_dockerImage_interal = docker.image("${nexus_registry}/${ubuntu_imagename}:${BUILD_ID}")                                        
+                    ubuntu_dockerImage_interal.push('latest')
+                    ubuntu_dockerImage_interal.push('${ubuntu_version}')
                   }
                 }
               }
