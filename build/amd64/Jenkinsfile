@@ -1,6 +1,7 @@
 pipeline {
   environment {
-    imagename = "piwi3910/base"
+    dockerhub_account = "piwi3910"
+    imagename = "base"
     docker_hub_cred = 'docker_reg'
     nexus_cred = 'f06e38c2-f3b3-43a2-a9d1-3dabb64ca873'
     alpine_dockerImage = ''
@@ -23,7 +24,7 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( nexus_registry, nexus_cred ) {                  
-                    alpine_dockerImage = docker.build("${env.imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
+                    alpine_dockerImage = docker.build("${dockerhub_account}/${imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
                   }  
                 }  
               }
@@ -35,7 +36,7 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( nexus_registry, nexus_cred ) {
-                    ubuntu_dockerImage = docker.build("${env.imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
+                    ubuntu_dockerImage = docker.build("${dockerhub_account}/${imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
                   }  
                 }
               }
