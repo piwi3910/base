@@ -67,7 +67,7 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( '', docker_hub_cred ) {
-                    sh("docker tag ${ubuntu_imagename}:ubuntu_${BUILD_ID} ${dockerhub_account}/${ubuntu_imagename}:${BUILD_ID}")
+                    sh("docker tag ${ubuntu_imagename}:${BUILD_ID} ${dockerhub_account}/${ubuntu_imagename}:${BUILD_ID}")
                     ubuntu_dockerImage_hub = docker.image("${dockerhub_account}/${ubuntu_imagename}:${BUILD_ID}")                    
                     ubuntu_dockerImage_hub.push('latest')
                     ubuntu_dockerImage_hub.push('${ubuntu_version}')
