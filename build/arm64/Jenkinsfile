@@ -8,7 +8,7 @@ pipeline {
     ubuntu_dockerImage = ''
     alpine_version = "3.13.5"
     ubuntu_version = "20.04"
-    nexus_registry = "https://registry.watteel.dev"
+    nexus_registry = "registry.watteel.dev"
   }
   agent {
     kubernetes {
@@ -23,7 +23,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( nexus_registry, nexus_cred ) {                  
+                  docker.withRegistry( "https://${nexus_registry}", nexus_cred ) {                  
                     alpine_dockerImage = docker.build("${imagename}:alpine_${BUILD_ID}", "--build-arg VERSION=${alpine_version} ${WORKSPACE}/alpine" ) 
                   }  
                 }  
@@ -35,7 +35,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( nexus_registry, nexus_cred ) {
+                  docker.withRegistry( "https://${nexus_registry}", nexus_cred ) {
                     ubuntu_dockerImage = docker.build("${imagename}:ubuntu_${BUILD_ID}", "--build-arg VERSION=${ubuntu_version} ${WORKSPACE}/ubuntu/" ) 
                   }  
                 }
@@ -84,7 +84,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( nexus_registry, nexus_cred ) {
+                  docker.withRegistry( "https://${nexus_registry}", nexus_cred ) {
                     sh("docker tag ${imagename}:alpine_${BUILD_ID} ${nexus_registry}/${imagename}:alpine_${BUILD_ID}")
                     alpine_dockerImage_interal = docker.image("${nexus_registry}/${imagename}:alpine_${BUILD_ID}")                    
                     alpine_dockerImage_interal.push('alpine_latest')
@@ -100,7 +100,7 @@ pipeline {
             steps {
               container('docker') {
                 script {
-                  docker.withRegistry( nexus_registry, nexus_cred ) {
+                  docker.withRegistry( "https://${nexus_registry}", nexus_cred ) {
                     sh("docker tag ${imagename}:ubuntu_${BUILD_ID} ${nexus_registry}/${imagename}:ubuntu_${BUILD_ID}")
                     ubuntu_dockerImage_interal = docker.image("${nexus_registry}/${imagename}:ubuntu_${BUILD_ID}")                                        
                     ubuntu_dockerImage_interal.push('ubuntu_latest')
