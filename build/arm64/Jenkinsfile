@@ -57,7 +57,7 @@ pipeline {
                 script {
                   docker.withRegistry( "https://${nexus_registry}", nexus_cred ) {
                     sh("docker tag ${alpine_imagename}:${BUILD_ID} ${nexus_registry}/${alpine_imagename}:${BUILD_ID}")
-                    alpine_dockerImage_interal = docker.image("${nexus_registry}/${imagename}:${BUILD_ID}")                    
+                    alpine_dockerImage_interal = docker.image("${nexus_registry}/${alpine_imagename}:${BUILD_ID}")                    
                     alpine_dockerImage_interal.push('${VERSION}')
                   }
                 }
