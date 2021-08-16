@@ -51,7 +51,8 @@ pipeline {
               container('docker') {
                 script {
                   docker.withRegistry( '', docker_hub_cred ) {
-                    alpine_dockerImage_hub = alpine_dockerImage.tag(["${dockerhub_account}/${imagename}:${BUILD_ID}"])
+                    sh("docker tag ${imagename}:ubuntu_${BUILD_ID} ${dockerhub_account}/${imagename}:ubuntu_${BUILD_ID}")
+                    alpine_dockerImage_hub = docker.image("${dockerhub_account}/${imagename}:ubuntu_${BUILD_ID}")
                     alpine_dockerImage_hub.push('alpine_latest')
                     alpine_dockerImage_hub.push('alpine_${alpine_version}')
                     alpine_dockerImage_hub.push('latest')
