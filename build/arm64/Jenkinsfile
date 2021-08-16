@@ -11,11 +11,7 @@ pipeline {
     ubuntu_version = "20.04"
     nexus_registry = "registry.watteel.dev"
   }
-  agent {
-    kubernetes {
-      yamlFile 'buildpod_arm64.yaml'
-    }
-  }  
+  agent none
   triggers { cron('0 0 * * 0')} // trigger the master branch to build weekly
   stages {
     stage('Build and Push') {
@@ -27,6 +23,11 @@ pipeline {
           }  
         }
         stages {
+          agent {
+            kubernetes {
+              yamlFile 'buildpod_arm64.yaml'
+            }
+          }  
           stage('Build Alpine') {
             steps {
               container('docker') {
