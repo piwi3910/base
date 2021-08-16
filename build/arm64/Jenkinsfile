@@ -20,9 +20,11 @@ pipeline {
   stages {
     stage('Build and Push') {
       matrix {
-        axis {
-          name 'VERSION'
-          values '3.13.5', '3.14.1'
+        axes {
+          axis {
+            name 'VERSION'
+            values '3.13.5', '3.14.1'
+          }  
         }
         stages('Run Builds') {
           stage('Build Alpine ${VERSION}') {
